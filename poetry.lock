@@ -93,6 +93,14 @@ python-versions = "*"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 
 [[package]]
+name = "cryptoauthlib"
+version = "20220320"
+description = "Python Wrapper Library for Microchip Security Products"
+category = "main"
+optional = false
+python-versions = ">=3.4.*"
+
+[[package]]
 name = "cryptography"
 version = "37.0.1"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
@@ -485,7 +493,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "d35146457f69d74d0790bd50caaafc84ea6ed40f44aa0d457ec8d4c863a774e1"
+content-hash = "3b288b0063317f40493dddb0491125ff60c3b851dc85eb0c6aab5fd15faffa78"
 
 [metadata.files]
 appdirs = [
@@ -566,6 +574,29 @@ colorama = [
 colorlog = [
     {file = "colorlog-4.8.0-py2.py3-none-any.whl", hash = "sha256:3dd15cb27e8119a24c1a7b5c93f9f3b455855e0f73993b1c25921b2f646f1dcd"},
     {file = "colorlog-4.8.0.tar.gz", hash = "sha256:59b53160c60902c405cdec28d38356e09d40686659048893e026ecbd589516b1"},
+]
+cryptoauthlib = [
+    {file = "cryptoauthlib-20220320-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d55672c3d1a1222a3cdda68b28c7409908a5315cb5d6bce06e081a7dd31826ad"},
+    {file = "cryptoauthlib-20220320-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:42d23eb6aaf48b050616a491a0bb4dfa89cf9a0cadab81e9bff72505c8bb9cb8"},
+    {file = "cryptoauthlib-20220320-cp310-cp310-win32.whl", hash = "sha256:358f20b0067b460c36b2328ae8d83f440c60eec916203901b46f9e6067fa1273"},
+    {file = "cryptoauthlib-20220320-cp310-cp310-win_amd64.whl", hash = "sha256:55443cbf6d5d439cb07fe23cea0632ad58a989c8dc3389426a687ea4f8545179"},
+    {file = "cryptoauthlib-20220320-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:45a67a2ad3804144c97e97c95d6f03630ef408e3ef742019e90c3df8bea5b451"},
+    {file = "cryptoauthlib-20220320-cp36-cp36m-win32.whl", hash = "sha256:5b6d2268ae8b97452230489dade1d80e133874c6ed358bbe1254769183a1e384"},
+    {file = "cryptoauthlib-20220320-cp36-cp36m-win_amd64.whl", hash = "sha256:8f7771791c68962392aa0df446118f35b9fa2e8010573dfaf8e2bfcf698ac40c"},
+    {file = "cryptoauthlib-20220320-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:bf6c8edd554716f7c6a6ea25bbb2751ad6c2f50d219fa4d762673ff231ceda3b"},
+    {file = "cryptoauthlib-20220320-cp37-cp37m-win32.whl", hash = "sha256:25e0a0e1dde9c5be7892c44c2f88c3659aadf33f2eb4fef7fb7017c22c132801"},
+    {file = "cryptoauthlib-20220320-cp37-cp37m-win_amd64.whl", hash = "sha256:5f14b58dbe5be91da764f2461f5436f21798edf895a032e1146b2b5fd3273d58"},
+    {file = "cryptoauthlib-20220320-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:ced41ea1d453c03c231b30288cfcfa8dd85e4b4b1bbd11ec8c4550f29cadb1be"},
+    {file = "cryptoauthlib-20220320-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:c7f2d5895dd331f279ae263840bcde86cdbc796ca75d57f67c4926d522d62435"},
+    {file = "cryptoauthlib-20220320-cp38-cp38-win32.whl", hash = "sha256:5a91a53079e2ce45ad047f580aabb1bc26fd3bf4af3eda2fd76478ca4f6d116b"},
+    {file = "cryptoauthlib-20220320-cp38-cp38-win_amd64.whl", hash = "sha256:be5508cb18f533003ca2626a03f302fd92198cd1ced4e68c3f492ce22f495744"},
+    {file = "cryptoauthlib-20220320-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:1e14d4081bdb7df9e415b7a324f743225c2aeda1dac3727b7fb3623222cd58b1"},
+    {file = "cryptoauthlib-20220320-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:5a3d058541659f6974bfa713d96a5808a79bd7b4209f087ec6b811f2473f0681"},
+    {file = "cryptoauthlib-20220320-cp39-cp39-win32.whl", hash = "sha256:7ee91c65ddb4952e5667e08a3116721ffd24a66a8152ec3a05feba2f02b0d61e"},
+    {file = "cryptoauthlib-20220320-cp39-cp39-win_amd64.whl", hash = "sha256:f3d957d0e288b5b4ea198d969d080c99d4526853a0f69b75f26047cfaf461123"},
+    {file = "cryptoauthlib-20220320-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:7b425019de9d7adeaad4d4fc92dc7709e8aac6a0626f0895bfa8228723e3c554"},
+    {file = "cryptoauthlib-20220320-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:5c71d532b24b17abd52aee35813e5bcdca6aa3dbcb84ae7a667b1ec04d789e7e"},
+    {file = "cryptoauthlib-20220320.tar.gz", hash = "sha256:a4ce22c9c6c96213f87f92db1ab4b37b8eb0bcb792ad9d5d72e285e4c63ff30a"},
 ]
 cryptography = [
     {file = "cryptography-37.0.1-cp36-abi3-macosx_10_10_universal2.whl", hash = "sha256:74b55f67f4cf026cb84da7a1b04fc2a1d260193d4ad0ea5e9897c8b74c1e76ac"},
