@@ -3,7 +3,7 @@ def getConfig():
         "Config",
         (object,),
         {
-            "IotEndpoint": "https://",
+            "IotEndpoint": "https://xxxxxxxxxxxxx-ats.iot.ap-northeast-1.amazonaws.com",
         },
     )
 
