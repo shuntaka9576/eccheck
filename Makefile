@@ -6,7 +6,9 @@ start:
 	fi
 
 lint:
-	poetry run pysen run lint
+	poetry run black ./src
+	poetry run isort ./src
+	poetry run flake8 --config=.config/flake8 ./src
 
 lint-fix:
 	poetry run pysen run format && \
@@ -15,8 +17,6 @@ lint-fix:
 test-unit:
 	poetry run pytest
 
-install-dev:
-	poetry install
-
 install:
-	poetry install --no-dev
+	export CRYPTOAUTHLIB_NOUSB=True; \
+	poetry install
