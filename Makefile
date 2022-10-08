@@ -20,3 +20,19 @@ test-unit:
 install:
 	export CRYPTOAUTHLIB_NOUSB=True; \
 	poetry install
+
+create-cert:
+	wget https://www.amazontrust.com/repository/AmazonRootCA1.pem
+	mv ./AmazonRootCA1.pem ./data/ca_certificate.pem
+	aws iot create-keys-and-certificate \
+	    --set-as-active \
+	    --certificate-pem-outfile ./data/device_certificate.pem \
+	    --public-key-outfile ./data/public.key \
+	    --private-key-outfile ./data/private.key
+
+create-iot-policy:
+	aws iot create-policy \
+	create-policy \
+	--policy-name test-policy \
+	--policy-document <value>
+                            

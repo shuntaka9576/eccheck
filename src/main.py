@@ -1,17 +1,10 @@
-from cryptoauthlib import (
-    atcab_info,
-    atcab_init,
-    atcab_random,
-    atcab_read_config_zone,
-    atcab_read_serial_number,
-    atcab_read_zone,
-    atcab_write_zone,
-    cfg_ateccx08a_i2c_default,
-)
+from cryptoauthlib import (atcab_info, atcab_init, atcab_read_config_zone,
+                           atcab_read_serial_number, cfg_ateccx08a_i2c_default)
 from cryptoauthlib.library import load_cryptoauthlib
 
 ATCA_SUCCESS = 0x00
 BLOCK_SIZE = 32
+
 
 class Ecc608:
     def __init__(self):
@@ -60,7 +53,7 @@ class Ecc608:
 
     def get_serial_number(self):
         return self.convert_to_string_from_bytearray(self.__serial_number)
-    
+
     def convert_to_string_from_bytearray(self, a):
         lines = []
         for x in range(0, len(a)):
@@ -72,7 +65,6 @@ class Ecc608:
 def main():
     ecc608 = Ecc608()
     print(f"serial_number: {ecc608.get_serial_number()}")
-
 
 
 if __name__ == "__main__":
