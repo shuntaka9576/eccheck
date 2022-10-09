@@ -1,4 +1,5 @@
 POLICY_NAME := "test-policy"
+THING_NAME := "test-thing"
 
 lint:
 	poetry run black ./src
@@ -34,4 +35,11 @@ attach-policy:
 	aws iot attach-policy \
 	--policy-name $(POLICY_NAME) \
 	--target "$(shell cat ./data/cert.json | jq -r ".certificateArn")"
-                            
+
+# モノ作成、アタッチ
+create-thing:
+	aws iot create-thing \
+	--thing-name $(THING_NAME)
+	aws iot attach-thing-principal \
+	--thing-name $(THING_NAME) \
+	--principal "$(shell cat ./data/cert.json | jq -r ".certificateArn")"
