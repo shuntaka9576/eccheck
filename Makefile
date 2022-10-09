@@ -40,6 +40,8 @@ attach-policy:
 create-thing:
 	aws iot create-thing \
 	--thing-name $(THING_NAME)
+
+attach-thing:
 	aws iot attach-thing-principal \
 	--thing-name $(THING_NAME) \
 	--principal "$(shell cat ./data/cert.json | jq -r ".certificateArn")"

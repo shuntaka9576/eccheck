@@ -11,9 +11,36 @@ Logger.init()
 logger = Logger.getLogger(__name__)
 
 AWS_IOT_ENDPOINT = config.IotEndpoint
-MQTT_KEEP_ALIVE_TIME_MILLS = 200
-PUBLISH_TOPIC_NAME = "sample/test"
+# AWS IoTのサポートするkeep-alive 5 - 1200 s
+KEEP_ALIVE_SECS = 5
+# ms単位なので、KEEP_ALIVE_SECS * 1000 より短い必要がある
+PING_TIMEOUT_MS = 1000
 THING_NAME = "test-thing"
+
+SUB_TOPIC_A = "sub/a"
+SUB_TOPIC_B = "sub/b"
+
+
+class PublishThread(Thread):
+    def __init__(self, mqtt_connection=None, publish_topic_name=None):
+        self.connection = mqtt_connection
+        self.publish_topic_name = publish_topic_name
+        Thread.__init__(self)
+
+    def run(self):
+
+        while True:
+            timestamp = int(time.time())
+            logger.info(f"publish {self.name} {timestamp}")
+            self.connection.publish(
+                topic=self.publish_topic_name,
+                payload=json.dumps({f"{self.native_id}": timestamp}),
+                qos=mqtt.QoS.AT_MOST_ONCE,
+            )
+
+            logger.info("publish done")
+
+            time.sleep(1)
 
 
 def createMQTTConnection(
@@ -41,7 +68,8 @@ def createMQTTConnection(
         host_name=AWS_IOT_ENDPOINT,
         port=8883,
         clean_session=False,
-        keep_alive_secs=MQTT_KEEP_ALIVE_TIME_MILLS,
+        keep_alive_secs=KEEP_ALIVE_SECS,
+        ping_timeout_ms=PING_TIMEOUT_MS,
     )
 
     connect_future = mqtt_connection.connect()
@@ -50,41 +78,47 @@ def createMQTTConnection(
     return mqtt_connection
 
 
-class PublishThread(Thread):
-    def __init__(self, mqtt_connection=None):
-        self.connection = mqtt_connection
+def sub_heavy_callback(topic, payload, dup, qos, retain):
+    logger.info("call heavy func")
+    logger.info(f"topic: {topic}, dup: {dup}, qos: {qos}, retain: {retain}")
+    logger.info(f"payload: {payload.decode('utf-8')}")
+    time.sleep(10)
+    logger.info("end heavy func")
 
-        Thread.__init__(self)
-        self.daemon = True
-        self.start()
 
-    def run(self):
-
-        while True:
-            self.connection.publish(
-                topic=PUBLISH_TOPIC_NAME,
-                payload=json.dumps({"Aスレッド": "dayo"}),
-                qos=mqtt.QoS.AT_LEAST_ONCE,
-            )
-
-            time.sleep(5)
+def sub_light_callback(topic, payload, dup, qos, retain):
+    logger.info("call light func")
+    logger.info(f"topic: {topic}, dup: {dup}, qos: {qos}, retain: {retain}")
+    logger.info(f"payload: {payload.decode('utf-8')}")
+    logger.info("end light func")
 
 
 def main():
     logger.info("start main thread")
+    logger.info("start create mqtt connection")
     connection = createMQTTConnection(
         device_certificate_filepath="./data/device_certificate.pem",
         private_key_filepath="./data/private.key",
         ca_certificate_filepath="./data/ca_certificate.pem",
     )
+    logger.info("end create mqtt connection")
 
-    PublishThread(connection)
+    subTopic1Publisher = PublishThread(connection, SUB_TOPIC_A)
+    subTopic1Publisher.daemon = True
+    subTopic1Publisher.name = SUB_TOPIC_A
+    subTopic1Publisher.start()
 
-    # con.subscribe(
-    #     topic="callback1",
-    #     qos=mqtt.QoS.AT_LEAST_ONCE,
-    #     callback=callback,
-    # )
+    subTopic2Publisher = PublishThread(connection, SUB_TOPIC_B)
+    subTopic2Publisher.daemon = True
+    subTopic2Publisher.name = SUB_TOPIC_B
+    subTopic2Publisher.start()
+
+    connection.subscribe(
+        topic=SUB_TOPIC_A, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_heavy_callback
+    )
+    connection.subscribe(
+        topic=SUB_TOPIC_B, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_light_callback
+    )
 
     while True:
         time.sleep(10)
