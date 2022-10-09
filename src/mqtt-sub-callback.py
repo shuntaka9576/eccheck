@@ -55,7 +55,7 @@ class PublishThread(Thread):
         self.connection = mqtt_connection
 
         Thread.__init__(self)
-        self.setDaemon(True)
+        self.daemon = True
         self.start()
 
     def run(self):
@@ -71,20 +71,23 @@ class PublishThread(Thread):
 
 
 def main():
-    logger.info("start")
-    con = createMQTTConnection(
+    logger.info("start main thread")
+    connection = createMQTTConnection(
         device_certificate_filepath="./data/device_certificate.pem",
         private_key_filepath="./data/private.key",
         ca_certificate_filepath="./data/ca_certificate.pem",
     )
 
-    # PublishThread(con)
+    PublishThread(connection)
 
     # con.subscribe(
     #     topic="callback1",
     #     qos=mqtt.QoS.AT_LEAST_ONCE,
     #     callback=callback,
     # )
+
+    while True:
+        time.sleep(10)
 
 
 if __name__ == "__main__":
