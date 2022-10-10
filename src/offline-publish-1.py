@@ -1,7 +1,7 @@
 import json
 import time
-from threading import Thread
 from concurrent import futures
+from threading import Thread
 
 from awscrt import io, mqtt
 
