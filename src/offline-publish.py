@@ -35,7 +35,7 @@ class PublishThread(Thread):
                 publish_future, _ = self.connection.publish(
                     topic=self.publish_topic_name,
                     payload=json.dumps({f"{self.native_id}": timestamp}),
-                    qos=mqtt.QoS.AT_MOST_ONCE,
+                    qos=mqtt.QoS.AT_LEAST_ONCE,
                 )
 
                 # publish_future.result(timeout=10)
@@ -45,9 +45,16 @@ class PublishThread(Thread):
                 time.sleep(1)
             except futures._base.TimeoutError as e:
                 logger.info(f"futures timeout error: {e}", exc_info=True)
-                publish_future.cancel()
+                # publish_future.cancel()
             except Exception as e:
                 logger.info(f"publish error: {e}", exc_info=True)
+
+
+def sub_callback(topic, payload, dup, qos, retain):
+    logger.info("call sub_callback")
+    logger.info(f"topic: {topic}, dup: {dup}, qos: {qos}, retain: {retain}")
+    logger.info(f"payload: {payload.decode('utf-8')}")
+    logger.info("end sub_callback")
 
 
 def createMQTTConnection(
@@ -99,6 +106,10 @@ def main():
     subTopic1Publisher.daemon = True
     subTopic1Publisher.name = SUB_TOPIC_A
     subTopic1Publisher.start()
+
+    connection.subscribe(
+        topic=SUB_TOPIC_A, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_callback
+    )
 
     while True:
         time.sleep(10)
