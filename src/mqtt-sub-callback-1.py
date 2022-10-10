@@ -4,6 +4,7 @@ from awscrt import io, mqtt
 from threading import Thread
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 config = Config.getConfig()
 Logger.init()
@@ -103,25 +104,35 @@ def main():
     )
     logger.info("end create mqtt connection")
 
-    subTopic1Publisher = PublishThread(connection, SUB_TOPIC_A)
-    subTopic1Publisher.daemon = True
-    subTopic1Publisher.name = SUB_TOPIC_A
-    subTopic1Publisher.start()
+    MAX_WORKER = 3
+    with ThreadPoolExecutor(
+        max_workers=MAX_WORKER, thread_name_prefix="execSubCallbackThread"
+    ) as executor:
+        subTopic1Publisher = PublishThread(connection, SUB_TOPIC_A)
+        subTopic1Publisher.daemon = True
+        subTopic1Publisher.name = SUB_TOPIC_A
+        subTopic1Publisher.start()
 
-    subTopic2Publisher = PublishThread(connection, SUB_TOPIC_B)
-    subTopic2Publisher.daemon = True
-    subTopic2Publisher.name = SUB_TOPIC_B
-    subTopic2Publisher.start()
+        subTopic2Publisher = PublishThread(connection, SUB_TOPIC_B)
+        subTopic2Publisher.daemon = True
+        subTopic2Publisher.name = SUB_TOPIC_B
+        subTopic2Publisher.start()
 
-    connection.subscribe(
-        topic=SUB_TOPIC_A, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_heavy_callback
-    )
-    connection.subscribe(
-        topic=SUB_TOPIC_B, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_light_callback
-    )
+        def sub_a_callbcak(topic, payload, dup, qos, retain):
+            executor.submit(sub_heavy_callback, topic, payload, dup, qos, retain)
 
-    while True:
-        time.sleep(10)
+        def sub_b_callbcak(topic, payload, dup, qos, retain):
+            executor.submit(sub_light_callback, topic, payload, dup, qos, retain)
+
+        connection.subscribe(
+            topic=SUB_TOPIC_A, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_a_callbcak
+        )
+        connection.subscribe(
+            topic=SUB_TOPIC_B, qos=mqtt.QoS.AT_LEAST_ONCE, callback=sub_b_callbcak
+        )
+
+        while True:
+            time.sleep(10)
 
 
 if __name__ == "__main__":

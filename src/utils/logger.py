@@ -3,7 +3,7 @@ from logging import Formatter, StreamHandler
 from logging import getLogger as logging_get_logger
 
 LOG_FORMAT = Formatter(
-    "%(asctime)s %(name)s [%(levelname)s] %(funcName)s (%(thread)d): %(message)s"
+    "%(asctime)s %(name)s [%(levelname)s] %(funcName)s [%(threadName)s] (%(thread)d): %(message)s"
 )
 LOG_LEVEL = "DEBUG"
 
