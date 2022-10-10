@@ -1,9 +1,11 @@
-import utils.config as Config
-import utils.logger as Logger
-from awscrt import io, mqtt
-from threading import Thread
 import json
 import time
+from threading import Thread
+
+from awscrt import io, mqtt
+
+import utils.config as Config
+import utils.logger as Logger
 
 config = Config.getConfig()
 Logger.init()

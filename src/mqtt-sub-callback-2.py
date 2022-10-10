@@ -1,10 +1,11 @@
-from cmath import log
-import utils.config as Config
-import utils.logger as Logger
-from awscrt import io, mqtt
-from threading import Thread
 import json
 import time
+from threading import Thread
+
+from awscrt import io, mqtt
+
+import utils.config as Config
+import utils.logger as Logger
 
 config = Config.getConfig()
 Logger.init()
@@ -114,7 +115,6 @@ class SubExecThread(Thread):
     def run(self):
         while True:
             if self.__is_using is True:
-                logger.info(self.__args)
                 self.__callback(
                     topic=self.__args[0],
                     payload=self.__args[1],
